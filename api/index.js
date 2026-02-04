@@ -4,7 +4,7 @@ const { Pool } = require('pg'); // 1. Import Pool from pg
 const app = express();
 
 const pool = new Pool({
-    connectionString: "postgres://<username>:<password>@localhost:5432/unb_marketplace"
+    connectionString: "postgres://Atharva K:9948@localhost:5432/unb_marketplace"
 });
 
 app.set('db', pool);

@@ -6,6 +6,14 @@ const Signup = ({ onBackToLogin }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    // Validation logic
+    const isNameValid = name.trim().length > 0;
+    const isEmailValid = email.toLowerCase().includes('@unb.ca');
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const isPasswordValid = password.length >= 8 && hasNumber && hasSpecialChar;
+    const isFormValid = isNameValid && isEmailValid && isPasswordValid;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -77,7 +85,12 @@ const Signup = ({ onBackToLogin }) => {
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-colors"
+                    disabled={!isFormValid}
+                    className={`w-full font-bold py-3 rounded-lg transition-all ${
+                        isFormValid 
+                        ? "bg-blue-700 hover:bg-blue-800 text-white shadow-lg" 
+                        : "bg-slate-700 text-slate-500 cursor-not-allowed opacity-50"
+                    }`}
                 >
                     Create Account
                 </button>

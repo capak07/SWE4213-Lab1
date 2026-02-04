@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 
 const pool = new Pool({
-    connectionString: "postgres://<username>:<password>@localhost:5432/unb_marketplace"
+    connectionString: "postgres://Atharva K:9948@localhost:5432/unb_marketplace"
 });
 
 const SALT_ROUNDS = 10;
