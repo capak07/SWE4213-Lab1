@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Header = ({ onLogout, setMyListings }) => {
+const Header = ({ onLogout, setMyListings, searchTerm = '', setSearchTerm = () => {} }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     return (
@@ -19,6 +19,8 @@ const Header = ({ onLogout, setMyListings }) => {
                         <input
                             type="text"
                             placeholder="Search items..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full bg-slate-800 border border-slate-700 focus:border-red-700 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:outline-none transition-all"
                         />
                         <div className="absolute left-3 top-2.5 text-gray-500">

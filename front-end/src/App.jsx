@@ -11,6 +11,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [myListings, setMyListings] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -66,10 +67,10 @@ function App() {
         </div>
       ) : (
         <>
-          <Header setMyListings={setMyListings} onLogout={onLogout} />
+          <Header setMyListings={setMyListings} onLogout={onLogout} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
           <main className="flex-grow px-[50px] py-10">
-            <Listings onSelectItem={(item) => setSelectedItem(item)} myListings={myListings} />
+            <Listings onSelectItem={(item) => setSelectedItem(item)} myListings={myListings} searchTerm={searchTerm} />
           </main>
 
           <Footer />
@@ -77,7 +78,7 @@ function App() {
           <ContactModal
             isOpen={!!selectedItem}
             onClose={() => setSelectedItem(null)}
-            email={selectedItem?.owner_email}
+            email={selectedItem?.owner_email || selectedItem?.seller_email || selectedItem?.email}
             title={selectedItem?.title}
           />
         </>
