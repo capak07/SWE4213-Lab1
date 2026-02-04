@@ -1,11 +1,23 @@
 import React from 'react';
 
-const ItemCard = ({ image, title, price, onView }) => {
+const ItemCard = ({ image, title, price, onView, onDelete }) => {
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer group flex flex-col h-full">
 
             {/* --- Product Image Section --- */}
             <div className="relative aspect-square w-full bg-slate-800 overflow-hidden">
+                {onDelete && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete();
+                        }}
+                        className="absolute top-2 z-10 bg-red-600/90 hover:bg-red-500 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-90 opacity-0 group-hover:opacity-100"
+                        title="Delete Listing"
+                    >
+                        ✕
+                    </button>
+                )}
                 <img
                     src={image || 'https://via.placeholder.com/400x400?text=No+Image'}
                     alt={title}

@@ -48,4 +48,28 @@ router.post("/products", authcheck, async (req, res) => {
     }
 });
 
+router.delete("/products/:id", authcheck, async (req, res) => {
+    const pool = req.app.get('db');
+    const productId = req.params.id;
+    const userId = req.user.userId; // From authcheck middleware
+
+    try {
+        // Delete the product only if it belongs to the authenticated user
+        const result = await pool.query(
+            "DELETE FROM products WHERE id = $1",
+            [productId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: "Listing not found or unauthorized" });
+        }
+
+        res.status(200).json({ message: "Listing deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error while deleting listing" });
+    }
+});
+
+
 module.exports = router;

@@ -36,6 +36,26 @@ const Listings = ({ onSelectItem, myListings }) => {
         }
     };
 
+    const handleDelete = async (productId) => {
+        if (!window.confirm("Are you sure you want to delete this listing?")) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3000/products/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                setProducts(prev => prev.filter(p => p.id !== productId));
+            }
+        } catch (err) {
+            console.error("Error deleting product:", err);
+        }
+    };
+
     useEffect(() => {
         fetchProducts();
     }, [myListings]);
@@ -59,6 +79,7 @@ const Listings = ({ onSelectItem, myListings }) => {
                         title={product.title}
                         price={product.price}
                         onView={() => onSelectItem(product)}
+                        onDelete={myListings ? () => handleDelete(product.id) : null}
                     />
                 ))}
 
