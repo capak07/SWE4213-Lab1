@@ -5,6 +5,7 @@ import CreateListingModal from './CreateListingModal'; // Import your component
 const Listings = ({ onSelectItem, myListings }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [sortOption, setSortOption] = useState('newest');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,8 +28,16 @@ const Listings = ({ onSelectItem, myListings }) => {
             if (!response.ok) throw new Error('Failed to fetch products');
 
             const data = await response.json();
-            const finalData = myListings ? data : data.sort(() => Math.random() - 0.5);
-            setProducts(finalData);
+            
+            const sortedData = [...data].sort((a, b) => {
+                if (sortOption === 'price-asc') return a.price - b.price;
+                if (sortOption === 'price-desc') return b.price - a.price;
+                if (sortOption === 'newest') return (b.created_at ? new Date(b.created_at) - new Date(a.created_at) : b.id - a.id);
+                if (sortOption === 'oldest') return (a.created_at ? new Date(a.created_at) - new Date(b.created_at) : a.id - b.id);
+                return 0;
+            });
+
+            setProducts(sortedData);
         } catch (err) {
             // Do nothing 
         } finally {
@@ -58,7 +67,7 @@ const Listings = ({ onSelectItem, myListings }) => {
 
     useEffect(() => {
         fetchProducts();
-    }, [myListings]);
+    }, [myListings, sortOption]);
 
     if (loading) return <div className="text-slate-400 text-center py-20 italic">Loading...</div>;
 
@@ -68,6 +77,16 @@ const Listings = ({ onSelectItem, myListings }) => {
                 <h1 className="text-2xl font-bold text-white">
                     {myListings ? "My Listings" : "Browse Listings"}
                 </h1>
+                <select 
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 px-3 outline-none cursor-pointer hover:bg-slate-700 transition-colors"
+                >
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                </select>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
