@@ -6,6 +6,7 @@ const Listings = ({ onSelectItem, myListings }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [sortOption, setSortOption] = useState('newest');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -71,27 +72,41 @@ const Listings = ({ onSelectItem, myListings }) => {
 
     if (loading) return <div className="text-slate-400 text-center py-20 italic">Loading...</div>;
 
+    const filteredProducts = products.filter(product => 
+        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <>
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-2xl font-bold text-white">
                     {myListings ? "My Listings" : "Browse Listings"}
                 </h1>
-                <select 
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                    className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 px-3 outline-none cursor-pointer hover:bg-slate-700 transition-colors"
-                >
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                </select>
+                <div className="flex gap-4 items-center">
+                    <input 
+                        type="text"
+                        placeholder="Search listings..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 px-4 outline-none w-64"
+                    />
+                    <select 
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value)}
+                        className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 px-3 outline-none cursor-pointer hover:bg-slate-700 transition-colors"
+                        style={{height:'35px', position:'relative', left:'70%'}}
+                    >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
 
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                     <ItemCard
                         key={product.id}
                         image={product.image_url || `https://picsum.photos/seed/${product.id}/400/400`}

@@ -14,6 +14,7 @@ const ItemCard = ({ image, title, price, onView, onDelete }) => {
                         }}
                         className="absolute top-2 z-10 bg-red-600/90 hover:bg-red-500 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-90 opacity-0 group-hover:opacity-100"
                         title="Delete Listing"
+                        style={{display:'flex',position:'relative', left:'25%',}}
                     >
                         ✕
                     </button>
