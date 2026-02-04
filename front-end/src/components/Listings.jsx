@@ -113,6 +113,7 @@ const Listings = ({ onSelectItem, myListings }) => {
                         title={product.title}
                         price={product.price}
                         createdAt={product.created_at}
+                        email={product.seller_email || product.email}
                         onView={() => onSelectItem(product)}
                         onDelete={myListings ? () => handleDelete(product.id) : null}
                     />
