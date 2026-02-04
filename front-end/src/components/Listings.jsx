@@ -112,6 +112,7 @@ const Listings = ({ onSelectItem, myListings }) => {
                         image={product.image_url || `https://picsum.photos/seed/${product.id}/400/400`}
                         title={product.title}
                         price={product.price}
+                        createdAt={product.created_at}
                         onView={() => onSelectItem(product)}
                         onDelete={myListings ? () => handleDelete(product.id) : null}
                     />
