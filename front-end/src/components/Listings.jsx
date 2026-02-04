@@ -26,6 +26,12 @@ const Listings = ({ onSelectItem, myListings }) => {
                 }
             });
 
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.reload();
+                return;
+            }
+
             if (!response.ok) throw new Error('Failed to fetch products');
 
             const data = await response.json();

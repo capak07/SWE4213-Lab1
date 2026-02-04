@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import AuthContainer from './components/AuthContainer'
@@ -8,13 +8,54 @@ import Listings from './components/Listings' // 1. Import the new component
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [myListings, setMyListings] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/auth/status', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          setIsLoggedIn(true);
+        } else {
+          localStorage.removeItem('token');
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   function onLogout() {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setMyListings(false);
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+        <div className="animate-pulse">Verifying session...</div>
+      </div>
+    );
   }
 
   return (
