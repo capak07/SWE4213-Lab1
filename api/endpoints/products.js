@@ -20,7 +20,7 @@ router.get("/products/mylistings", authcheck, async (req, res) => {
     try {
         const userEmail = req.user.email;
         const result = await pool.query(
-            "SELECT * FROM products ORDER BY id DESC",
+            "SELECT * FROM products WHERE owner_email = $1 ORDER BY id DESC",
             [userEmail]
         );
         res.json(result.rows);
@@ -51,13 +51,13 @@ router.post("/products", authcheck, async (req, res) => {
 router.delete("/products/:id", authcheck, async (req, res) => {
     const pool = req.app.get('db');
     const productId = req.params.id;
-    const userId = req.user.userId; // From authcheck middleware
+    const ownerEmail = req.user.email; // Use email to match your schema
 
     try {
         // Delete the product only if it belongs to the authenticated user
         const result = await pool.query(
-            "DELETE FROM products WHERE id = $1",
-            [productId]
+            "DELETE FROM products WHERE id = $1 AND owner_email = $2",
+            [productId, ownerEmail]
         );
 
         if (result.rowCount === 0) {
